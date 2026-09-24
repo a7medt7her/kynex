@@ -1,0 +1,256 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kynex/core/unitles/app_color.dart';
+import 'package:kynex/core/unitles/app_text_style.dart';
+import 'package:kynex/features/setup_profile/data/helper/switchuntis.dart';
+import 'package:kynex/features/setup_profile/presentation/view/widgets/units_container.dart';
+import 'package:kynex/features/setup_profile/presentation/view_model/age_cubit/cubit/age_cubit.dart';
+import 'package:kynex/features/setup_profile/presentation/view_model/units_cubit/cubit/units_cubit.dart';
+
+class UserBody extends StatelessWidget {
+  UserBody({super.key});
+  final heightController = TextEditingController();
+  final weightController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AgeCubit()),
+        BlocProvider(create: (context) => UnitsCubit()),
+      ],
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: REdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 50.h),
+                Text(
+                  'Your Body Profile',
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontSize: 24.sp,
+                    fontWeight: AppTextStyle.bold,
+                  ),
+                ),
+                Text(
+                  'Tell us about yourself so we can calibrate your fitness journey.',
+                  style: TextStyle(
+                    fontFamily: AppTextStyle.fontFamliy2,
+                    color: AppColors.secondary,
+                    fontSize: 16.sp,
+                    fontWeight: AppTextStyle.regular,
+                  ),
+                  maxLines: 2,
+                ),
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      padding: REdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 20,
+                      ),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors.white.withValues(alpha: 0.05),
+                          width: 1.w,
+                        ),
+                        borderRadius: BorderRadius.circular(14.r),
+                        color: AppColors.black6.withValues(alpha: 0.6),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Age',
+                                style: TextStyle(
+                                  fontFamily: AppTextStyle.fontFamliy2,
+                                  color: AppColors.white,
+                                  fontSize: 14.sp,
+                                  fontWeight: AppTextStyle.semiBold,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                'Years',
+                                style: TextStyle(
+                                  fontFamily: AppTextStyle.fontFamliy2,
+                                  color: AppColors.secondary,
+                                  fontSize: 12.sp,
+                                  fontWeight: AppTextStyle.medium,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 16),
+                          Container(
+                            width: 316.w,
+                            height: 77.h,
+                            decoration: BoxDecoration(
+                              border: Border.symmetric(
+                                horizontal: BorderSide(
+                                  width: 1.w,
+                                  color: AppColors.primary2.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                ),
+                              ),
+                              gradient: LinearGradient(
+                                begin: AlignmentGeometry.topLeft,
+                                end: AlignmentGeometry.bottomRight,
+                                stops: [0.0, 0.5, 1.0],
+                                colors: [
+                                  AppColors.primary2.withValues(alpha: 0.1),
+                                  AppColors.primary2.withValues(alpha: 0.05),
+                                  AppColors.primary2.withValues(alpha: 0.03),
+                                ],
+                              ),
+                            ),
+
+                            child: BlocBuilder<AgeCubit, int>(
+                              builder: (context, state) {
+                                return PageView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  controller: PageController(
+                                    viewportFraction: 0.3.w,
+                                  ),
+                                  itemCount: 63,
+                                  onPageChanged: (index) {
+                                    context.read<AgeCubit>().itemSelected(
+                                      index,
+                                    );
+                                  },
+                                  itemBuilder: (context, index) {
+                                    final age = index + 18;
+
+                                    return Center(
+                                      child: AnimatedOpacity(
+                                        opacity: state == index ? 1 : 0.1,
+                                        curve: Curves.easeInOutSine,
+                                        duration: Duration(seconds: 1),
+                                        child: Text(
+                                          '$age',
+                                          style: TextStyle(
+                                            fontWeight: AppTextStyle.bold,
+                                            fontSize: 48.sp,
+                                            color: AppColors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16.h),
+                Container(
+                  padding: REdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColors.white.withValues(alpha: 0.05),
+                      width: 1.w,
+                    ),
+                    borderRadius: BorderRadius.circular(14.r),
+                    color: AppColors.black6.withValues(alpha: 0.6),
+                  ),
+                  child: BlocBuilder<UnitsCubit, UnitsState>(
+                    builder: (context, state) {
+                      final bool isCm = context.read<UnitsCubit>().isCm;
+
+                      return UnitsContainer(
+                        unitName: 'Height',
+                        whichUnit: isCm,
+                        unit1: 'cm',
+                        unit2: 'ft',
+                        controller: heightController,
+                        onTap1: () {
+                          switchUnits(
+                            heightUnit: context.read<UnitsCubit>().heightUnit,
+                            unit: isCm,
+                            convertHeight2: context
+                                .read<UnitsCubit>()
+                                .convertHeight2,
+                            controllerText: heightController,
+                          );
+                        },
+
+                        onTap2: () {
+                          switchUnits2(
+                            heightUnit: context.read<UnitsCubit>().heightUnit,
+                            unit: isCm,
+                            convertHeight2: context
+                                .read<UnitsCubit>()
+                                .convertHeight2,
+                            controllerText: heightController,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Container(
+                  padding: REdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColors.white.withValues(alpha: 0.05),
+                      width: 1.w,
+                    ),
+                    borderRadius: BorderRadius.circular(14.r),
+                    color: AppColors.black6.withValues(alpha: 0.6),
+                  ),
+                  child: BlocBuilder<UnitsCubit, UnitsState>(
+                    builder: (context, state) {
+                      final bool isKg = context.read<UnitsCubit>().isKg;
+                      return UnitsContainer(
+                        unitName: 'Weight',
+                        whichUnit: isKg,
+                        unit1: 'kg',
+                        unit2: 'lbs',
+                        controller: weightController,
+                        onTap1: () {
+                          switchUnits(
+                            heightUnit: context.read<UnitsCubit>().wightUnit,
+                            unit: isKg,
+                            convertHeight2: context
+                                .read<UnitsCubit>()
+                                .convertWight2,
+                            controllerText: weightController,
+                          );
+                        },
+                        onTap2: () {
+                          switchUnits2(
+                            heightUnit: context.read<UnitsCubit>().wightUnit,
+                            unit: isKg,
+                            convertHeight2: context
+                                .read<UnitsCubit>()
+                                .convertWight2,
+                            controllerText: weightController,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

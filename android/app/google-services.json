@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "260428267973",
+    "project_id": "kynex-e740b",
+    "storage_bucket": "kynex-e740b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260428267973:android:00c4c3c2d9b3fa8aeb0bac",
+        "android_client_info": {
+          "package_name": "com.example.kynex"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBo4-PtYEKeVY6UnbzpJPzCFD9lCn7jXT0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
