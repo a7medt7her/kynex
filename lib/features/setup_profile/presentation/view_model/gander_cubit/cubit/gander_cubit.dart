@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:kynex/core/helper/create_user.dart';
+import 'package:kynex/core/helper/fitness_calculations.dart';
 import 'package:kynex/core/helper/secure_storage_service.dart';
 import 'package:kynex/core/services/app_dependencies.dart';
 import 'package:meta/meta.dart';
@@ -8,8 +9,8 @@ part 'gander_state.dart';
 
 class GanderCubit extends Cubit<GanderState> {
   GanderCubit() : super(GanderInitial());
-  bool manSelected = false;
 
+  GenderType? ganderSelected;
   int page = 0;
   Future<void> saveUser(String gander) async {
     emit(SaveDataLoading());
@@ -26,8 +27,8 @@ class GanderCubit extends Cubit<GanderState> {
     }
   }
 
-  void man() {
-    manSelected = !manSelected;
-    emit(Man());
+  void ganderSelect(GenderType gander) {
+    ganderSelected = gander;
+    emit(GanderSelected());
   }
 }

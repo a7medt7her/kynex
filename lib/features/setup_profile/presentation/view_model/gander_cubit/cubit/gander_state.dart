@@ -14,6 +14,4 @@ final class SaveDataError extends GanderState {
   SaveDataError({required this.massage});
 }
 
-final class Man extends GanderState {}
-
-final class Woman extends GanderState {}
+final class GanderSelected extends GanderState {}

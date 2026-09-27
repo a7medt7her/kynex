@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kynex/core/helper/fitness_calculations.dart';
 import 'package:kynex/core/unitles/app_color.dart';
 import 'package:kynex/core/unitles/app_text_style.dart';
 import 'package:kynex/features/setup_profile/data/helper/switchuntis.dart';
@@ -168,32 +169,32 @@ class UserBody extends StatelessWidget {
                   ),
                   child: BlocBuilder<UnitsCubit, UnitsState>(
                     builder: (context, state) {
-                      final bool isCm = context.read<UnitsCubit>().isCm;
+                      final cubit = context.read<UnitsCubit>();
 
                       return UnitsContainer(
                         unitName: 'Height',
-                        whichUnit: isCm,
+                        whichUnit: cubit.heightUnit == HeightUnit.cm,
                         unit1: 'cm',
                         unit2: 'ft',
                         controller: heightController,
                         onTap1: () {
                           switchUnits(
-                            heightUnit: context.read<UnitsCubit>().heightUnit,
-                            unit: isCm,
-                            convertHeight2: context
-                                .read<UnitsCubit>()
-                                .convertHeight2,
+                            selectedUnit: HeightUnit.cm,
+                            heightUnit: cubit.heightUnits,
+                            unit: cubit.heightUnit == HeightUnit.cm,
+                            convertHeight2: cubit.convertedHeight,
+
                             controllerText: heightController,
                           );
                         },
 
                         onTap2: () {
-                          switchUnits2(
-                            heightUnit: context.read<UnitsCubit>().heightUnit,
-                            unit: isCm,
-                            convertHeight2: context
-                                .read<UnitsCubit>()
-                                .convertHeight2,
+                          switchUnits(
+                            selectedUnit: HeightUnit.ft,
+                            heightUnit: cubit.heightUnits,
+                            unit: cubit.heightUnit == HeightUnit.ft,
+                            convertHeight2: cubit.convertedHeight,
+
                             controllerText: heightController,
                           );
                         },
@@ -215,30 +216,28 @@ class UserBody extends StatelessWidget {
                   ),
                   child: BlocBuilder<UnitsCubit, UnitsState>(
                     builder: (context, state) {
-                      final bool isKg = context.read<UnitsCubit>().isKg;
+                      final cubit = context.read<UnitsCubit>();
                       return UnitsContainer(
                         unitName: 'Weight',
-                        whichUnit: isKg,
+                        whichUnit: cubit.weightUnit == WeightUnit.kg,
                         unit1: 'kg',
                         unit2: 'lbs',
                         controller: weightController,
                         onTap1: () {
-                          switchUnits(
-                            heightUnit: context.read<UnitsCubit>().wightUnit,
-                            unit: isKg,
-                            convertHeight2: context
-                                .read<UnitsCubit>()
-                                .convertWight2,
+                          switchWeight(
+                            selectedUnit: WeightUnit.kg,
+                            weightUnit: cubit.wightUnit,
+                            unit: cubit.weightUnit == WeightUnit.kg,
+                            convertWeight2: cubit.convertedWight,
                             controllerText: weightController,
                           );
                         },
                         onTap2: () {
-                          switchUnits2(
-                            heightUnit: context.read<UnitsCubit>().wightUnit,
-                            unit: isKg,
-                            convertHeight2: context
-                                .read<UnitsCubit>()
-                                .convertWight2,
+                          switchWeight(
+                            selectedUnit: WeightUnit.lb,
+                            weightUnit: cubit.wightUnit,
+                            unit: cubit.weightUnit == WeightUnit.lb,
+                            convertWeight2: cubit.convertedWight,
                             controllerText: weightController,
                           );
                         },

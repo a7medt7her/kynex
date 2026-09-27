@@ -1,6 +1,6 @@
 import 'dart:math';
 
-enum Gender { male, female }
+enum GenderType { male, female }
 
 enum FitnessGoal { muscleGain, weightLoss, flexibility, endurance }
 
@@ -24,11 +24,11 @@ num convertWeight({
   if (from == to) return weight;
 
   if (from == WeightUnit.kg && to == WeightUnit.lb) {
-    return weight / 0.45359237;
+    return weight * 0.45359237;
   }
 
   if (from == WeightUnit.lb && to == WeightUnit.kg) {
-    return weight * 0.45359237;
+    return weight / 0.45359237;
   }
 
   return weight;
@@ -42,11 +42,11 @@ num convertHeight({
   if (from == to) return height;
 
   if (from == HeightUnit.cm && to == HeightUnit.ft) {
-    return height / 30.48;
+    return height * 30.48;
   }
 
   if (from == HeightUnit.ft && to == HeightUnit.cm) {
-    return height * 30.48;
+    return height / 30.48;
   }
 
   return height;
@@ -81,7 +81,7 @@ num calculateBmr({
   required num height,
   required HeightUnit heightUnit,
   required int age,
-  required Gender gender,
+  required GenderType gender,
 }) {
   final weightKg = convertWeight(
     weight: weight,
@@ -95,7 +95,7 @@ num calculateBmr({
     from: heightUnit,
   );
 
-  if (gender == Gender.male) {
+  if (gender == GenderType.male) {
     return (10 * weightKg) + (6.25 * heightCm) - (5 * age) + 5;
   }
 

@@ -6,32 +6,33 @@ part 'units_state.dart';
 
 class UnitsCubit extends Cubit<UnitsState> {
   UnitsCubit() : super(UnitsInitial());
-  bool isCm = true;
-  bool isKg = true;
-  void heightUnit() {
-    isCm = !isCm;
+  WeightUnit? weightUnit = WeightUnit.kg;
+  HeightUnit? heightUnit = HeightUnit.cm;
+
+  void heightUnits(HeightUnit h) {
+    heightUnit = h;
     emit(HeightUnits());
   }
 
-  void wightUnit() {
-    isKg = !isKg;
+  void wightUnit(WeightUnit w) {
+    weightUnit = w;
     emit(WightUnits());
   }
 
-  num convertHeight2(num height) {
+  num convertedHeight(num height) {
     final converted = convertHeight(
       height: height,
-      from: isCm ? HeightUnit.ft : HeightUnit.cm,
-      to: isCm ? HeightUnit.cm : HeightUnit.ft,
+      from: heightUnit == HeightUnit.cm ? HeightUnit.cm : HeightUnit.ft,
+      to: heightUnit == HeightUnit.cm ? HeightUnit.ft : HeightUnit.cm,
     );
     return converted;
   }
 
-  num convertWight2(num weight) {
+  num convertedWight(num weight) {
     return convertWeight(
       weight: weight,
-      from: isKg ? WeightUnit.lb : WeightUnit.kg,
-      to: isKg ? WeightUnit.kg : WeightUnit.lb,
+      from: weightUnit == WeightUnit.kg ? WeightUnit.kg : WeightUnit.lb,
+      to: weightUnit == WeightUnit.kg ? WeightUnit.lb : WeightUnit.kg,
     );
   }
 }

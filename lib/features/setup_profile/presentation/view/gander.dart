@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kynex/core/helper/fitness_calculations.dart';
 import 'package:kynex/core/unitles/app_color.dart';
 import 'package:kynex/core/unitles/app_text_style.dart';
 import 'package:kynex/core/unitles/asstes.dart';
@@ -49,20 +50,18 @@ class Gander extends StatelessWidget {
               SizedBox(height: 89.h),
               BlocBuilder<GanderCubit, GanderState>(
                 builder: (context, state) {
-                  final bool isManSelected = context
-                      .read<GanderCubit>()
-                      .manSelected;
+                  final cubit = context.read<GanderCubit>();
 
                   return Column(
                     children: [
-                      isManSelected
+                      cubit.ganderSelected == GenderType.male
                           ? GanderCardSelected(
                               ganderTyp: 'Male',
                               image: AssetsIcon.man,
                             )
                           : GestureDetector(
                               onTap: () {
-                                context.read<GanderCubit>().man();
+                                cubit.ganderSelect(GenderType.male);
                               },
                               child: GanderCardUnselected(
                                 ganderTyp: 'Male',
@@ -70,14 +69,14 @@ class Gander extends StatelessWidget {
                               ),
                             ),
                       SizedBox(height: 16.h),
-                      isManSelected == false
+                      cubit.ganderSelected == GenderType.female
                           ? GanderCardSelected(
                               ganderTyp: 'Female',
                               image: AssetsIcon.woman,
                             )
                           : GestureDetector(
                               onTap: () {
-                                context.read<GanderCubit>().man();
+                                cubit.ganderSelect(GenderType.female);
                               },
                               child: GanderCardUnselected(
                                 ganderTyp: 'Female',
