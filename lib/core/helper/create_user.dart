@@ -54,19 +54,10 @@ class CreateUser {
     }
   }
 
-  Future<void> userGoals(
-    String uid,
-    String currentLevel,
-    String goal,
-    num wightGoal,
-  ) async {
+  Future<void> userGoals(String uid, String currentLevel, String goal) async {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     try {
-      await users.doc(uid).update({
-        'currentLevel': currentLevel,
-        'goal': goal,
-        'wightGoal': wightGoal,
-      });
+      await users.doc(uid).update({'currentLevel': currentLevel, 'goal': goal});
     } on FirebaseException catch (e) {
       print(e.code);
       print(e.message);

@@ -8,6 +8,7 @@ class UnitsCubit extends Cubit<UnitsState> {
   UnitsCubit() : super(UnitsInitial());
   WeightUnit? weightUnit = WeightUnit.kg;
   HeightUnit? heightUnit = HeightUnit.cm;
+  WeightUnit? targetWeight = WeightUnit.kg;
 
   void heightUnits(HeightUnit h) {
     heightUnit = h;
@@ -17,6 +18,11 @@ class UnitsCubit extends Cubit<UnitsState> {
   void wightUnit(WeightUnit w) {
     weightUnit = w;
     emit(WightUnits());
+  }
+
+  void targetWightUnit(WeightUnit w) {
+    targetWeight = w;
+    emit(TargetWightUnits());
   }
 
   num convertedHeight(num height) {
@@ -29,6 +35,14 @@ class UnitsCubit extends Cubit<UnitsState> {
   }
 
   num convertedWight(num weight) {
+    return convertWeight(
+      weight: weight,
+      from: weightUnit == WeightUnit.kg ? WeightUnit.kg : WeightUnit.lb,
+      to: weightUnit == WeightUnit.kg ? WeightUnit.lb : WeightUnit.kg,
+    );
+  }
+
+  num convertedTargetWight(num weight) {
     return convertWeight(
       weight: weight,
       from: weightUnit == WeightUnit.kg ? WeightUnit.kg : WeightUnit.lb,

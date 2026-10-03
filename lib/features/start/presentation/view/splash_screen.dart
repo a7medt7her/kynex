@@ -5,8 +5,7 @@ import 'package:kynex/core/helper/svg_helper.dart';
 import 'package:kynex/core/unitles/app_color.dart';
 import 'package:kynex/core/unitles/app_text_style.dart';
 import 'package:kynex/core/unitles/asstes.dart';
-import 'package:kynex/features/setup_profile/presentation/view/user_body.dart';
-import 'package:kynex/features/setup_profile/presentation/view/user_goals.dart';
+import 'package:kynex/features/setup_profile/presentation/view/setup.dart';
 import 'package:kynex/features/start/presentation/view/onboard_view.dart';
 import 'package:kynex/features/start/presentation/view/widgets/loading_indicato.dart';
 
@@ -53,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen>
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => UserBody()),
+          MaterialPageRoute(builder: (context) => Setup()),
         );
       }
     });

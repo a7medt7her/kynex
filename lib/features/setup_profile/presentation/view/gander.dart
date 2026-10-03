@@ -18,77 +18,79 @@ class Gander extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => GanderCubit(),
-      child: Scaffold(
-        body: Padding(
-          padding: REdgeInsets.symmetric(horizontal: 21.w),
-          child: Column(
-            children: [
-              SizedBox(height: 104.h),
-              Text(
-                'Tell us about yourself',
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Text(
+              'Tell us about yourself',
+              style: TextStyle(
+                color: AppColors.white,
+                fontSize: 24.sp,
+                fontWeight: AppTextStyle.bold,
+              ),
+            ),
+
+            SizedBox(height: 8.h),
+
+            SizedBox(
+              width: 271.27.w,
+              child: Text(
+                'To give you a customize experience we need to know your gender',
                 style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 24.sp,
-                  fontWeight: AppTextStyle.bold,
+                  fontFamily: AppTextStyle.fontFamliy2,
+                  color: AppColors.secondary,
+                  fontSize: 16.sp,
+                  fontWeight: AppTextStyle.regular,
                 ),
+                textAlign: TextAlign.center,
               ),
-              SizedBox(height: 8.h),
-              SizedBox(
-                width: 271.27.w,
+            ),
 
-                child: Text(
-                  'To give you a customize experience we need to know your gender',
-                  style: TextStyle(
-                    fontFamily: AppTextStyle.fontFamliy2,
-                    color: AppColors.secondary,
-                    fontSize: 16.sp,
-                    fontWeight: AppTextStyle.regular,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              SizedBox(height: 89.h),
-              BlocBuilder<GanderCubit, GanderState>(
-                builder: (context, state) {
-                  final cubit = context.read<GanderCubit>();
+            SizedBox(height: 89.h),
 
-                  return Column(
-                    children: [
-                      cubit.ganderSelected == GenderType.male
-                          ? GanderCardSelected(
+            BlocBuilder<GanderCubit, GanderState>(
+              builder: (context, state) {
+                final cubit = context.read<GanderCubit>();
+
+                return Column(
+                  children: [
+                    cubit.ganderSelected == GenderType.male
+                        ? GanderCardSelected(
+                            ganderTyp: 'Male',
+                            image: AssetsIcon.man,
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              cubit.ganderSelect(GenderType.male);
+                            },
+                            child: GanderCardUnselected(
                               ganderTyp: 'Male',
                               image: AssetsIcon.man,
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                cubit.ganderSelect(GenderType.male);
-                              },
-                              child: GanderCardUnselected(
-                                ganderTyp: 'Male',
-                                image: AssetsIcon.man,
-                              ),
                             ),
-                      SizedBox(height: 16.h),
-                      cubit.ganderSelected == GenderType.female
-                          ? GanderCardSelected(
+                          ),
+
+                    SizedBox(height: 16.h),
+
+                    cubit.ganderSelected == GenderType.female
+                        ? GanderCardSelected(
+                            ganderTyp: 'Female',
+                            image: AssetsIcon.woman,
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              cubit.ganderSelect(GenderType.female);
+                            },
+                            child: GanderCardUnselected(
                               ganderTyp: 'Female',
                               image: AssetsIcon.woman,
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                cubit.ganderSelect(GenderType.female);
-                              },
-                              child: GanderCardUnselected(
-                                ganderTyp: 'Female',
-                                image: AssetsIcon.woman,
-                              ),
                             ),
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
+                          ),
+                  ],
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

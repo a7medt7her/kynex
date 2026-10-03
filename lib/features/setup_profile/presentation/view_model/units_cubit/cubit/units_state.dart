@@ -9,6 +9,8 @@ final class HeightUnits extends UnitsState {}
 
 final class WightUnits extends UnitsState {}
 
+final class TargetWightUnits extends UnitsState {}
+
 final class HeightConvert extends UnitsState {}
 
 final class WightConvert extends UnitsState {}

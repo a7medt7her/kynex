@@ -5,6 +5,7 @@ import 'package:kynex/core/helper/fitness_calculations.dart';
 import 'package:kynex/core/unitles/app_color.dart';
 import 'package:kynex/core/unitles/app_text_style.dart';
 import 'package:kynex/core/unitles/asstes.dart';
+import 'package:kynex/features/setup_profile/data/enums/eunms.dart';
 import 'package:kynex/features/setup_profile/data/model/cards_models.dart';
 import 'package:kynex/features/setup_profile/presentation/view/widgets/cards.dart';
 import 'package:kynex/features/setup_profile/presentation/view_model/goal_cubit/cubit/goal_cubit.dart';
