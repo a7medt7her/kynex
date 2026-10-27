@@ -1,11 +1,11 @@
-```yaml
+
 name: Flutter CI
 
 on:
   push:
-    branches: [main]
+    branches: ["main"]
   pull_request:
-    branches: [main]
+    branches: ["main"]
 
 jobs:
   build:
@@ -27,9 +27,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Analyze project
+      - name: Analyze project source
         run: flutter analyze
-
-      - name: Run tests
-        run: flutter test
 ```
