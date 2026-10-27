@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kynex/core/helper/app_validator.dart';
 import 'package:kynex/core/unitles/app_color.dart';
 import 'package:kynex/core/unitles/app_text_style.dart';
 
@@ -14,6 +15,7 @@ class UnitsContainer extends StatelessWidget {
     required this.unit1,
     required this.unit2,
     required this.controller,
+    this.onChanged,
   });
   final String unitName;
   final void Function()? onTap1;
@@ -22,6 +24,7 @@ class UnitsContainer extends StatelessWidget {
   final String unit1;
   final String unit2;
   final TextEditingController controller;
+  final void Function(String)? onChanged;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -121,6 +124,8 @@ class UnitsContainer extends StatelessWidget {
               border: Border.all(color: AppColors.black5, width: 2.w),
             ),
             child: TextFormField(
+              onChanged: onChanged,
+              validator: AppValidator.checkFelid,
               controller: controller,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               textAlign: TextAlign.center,

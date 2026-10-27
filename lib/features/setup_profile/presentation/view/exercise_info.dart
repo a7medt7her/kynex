@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kynex/features/setup_profile/data/helper/fitness_calculations.dart';
 import 'package:kynex/core/helper/svg_helper.dart';
 import 'package:kynex/core/unitles/app_color.dart';
 import 'package:kynex/core/unitles/app_text_style.dart';
 import 'package:kynex/core/unitles/asstes.dart';
-import 'package:kynex/features/setup_profile/data/activity_levels_info_data.dart';
+import 'package:kynex/features/setup_profile/data/helper/activity_levels_info_data.dart';
 import 'package:kynex/features/setup_profile/data/enums/eunms.dart';
-import 'package:kynex/features/setup_profile/data/exercise_info_data.dart';
+import 'package:kynex/features/setup_profile/data/helper/exercise_info_data.dart';
 import 'package:kynex/features/setup_profile/presentation/view/widgets/location_training_card.dart';
 import 'package:kynex/features/setup_profile/presentation/view_model/exercise_cubit/cubit/exercise_info_page_cubit.dart';
+import 'package:kynex/features/setup_profile/presentation/view_model/setup_cubit/cubit/setup_cubit.dart';
 
 class ExerciseInfo extends StatelessWidget {
   const ExerciseInfo({super.key});
@@ -52,18 +54,20 @@ class ExerciseInfo extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16.h),
-            BlocBuilder<ExerciseInfoPageCubit, ExerciseInfoPageState>(
+            BlocSelector<SetupCubit, SetupState, ExerciseLocation?>(
+              selector: (state) => state.userSetup.exerciseLocation,
               builder: (context, state) {
-                final cubit = context.read<ExerciseInfoPageCubit>();
-                final bool home = state.location == ExerciseLocation.home;
-                final bool gym = state.location == ExerciseLocation.gym;
-                final bool outdoor = state.location == ExerciseLocation.outdoor;
+                final bool home = state == ExerciseLocation.home;
+                final bool gym = state == ExerciseLocation.gym;
+                final bool outdoor = state == ExerciseLocation.outdoor;
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     LocationTrainingCard(
                       onTap: () {
-                        cubit.selectLocation(ExerciseLocation.home);
+                        context.read<SetupCubit>().saveExerciseLocation(
+                          exerciseLocation: ExerciseLocation.home,
+                        );
                       },
 
                       subtitle: 'Home',
@@ -78,7 +82,9 @@ class ExerciseInfo extends StatelessWidget {
                     LocationTrainingCard(
                       needPadding: true,
                       onTap: () {
-                        cubit.selectLocation(ExerciseLocation.gym);
+                        context.read<SetupCubit>().saveExerciseLocation(
+                          exerciseLocation: ExerciseLocation.gym,
+                        );
                       },
 
                       subtitle: 'Gym',
@@ -92,7 +98,9 @@ class ExerciseInfo extends StatelessWidget {
                     LocationTrainingCard(
                       needPadding: true,
                       onTap: () {
-                        cubit.selectLocation(ExerciseLocation.outdoor);
+                        context.read<SetupCubit>().saveExerciseLocation(
+                          exerciseLocation: ExerciseLocation.outdoor,
+                        );
                       },
 
                       subtitle: 'Outdoor',
@@ -134,11 +142,32 @@ class ExerciseInfo extends StatelessWidget {
               builder: (context, state) {
                 return Row(
                   children: WeekDay.values.map((day) {
-                    final isSelected = state.selectedDays.contains(day);
+                    final isSelected;
+                    if (context
+                        .read<SetupCubit>()
+                        .state
+                        .userSetup
+                        .weekDay
+                        .isEmpty) {
+                      isSelected = state.selectedDays.contains(day);
+                    } else {
+                      isSelected = context
+                          .read<SetupCubit>()
+                          .state
+                          .userSetup
+                          .weekDay
+                          .contains(day);
+                    }
 
                     return GestureDetector(
                       onTap: () {
-                        context.read<ExerciseInfoPageCubit>().toggleDay(day);
+                        final updatedDays = context
+                            .read<ExerciseInfoPageCubit>()
+                            .toggleDay(day);
+
+                        context.read<SetupCubit>().saveWeekDay(
+                          weekDay: updatedDays,
+                        );
                       },
                       child: Container(
                         padding: REdgeInsets.all(12),
@@ -180,7 +209,8 @@ class ExerciseInfo extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16.h),
-            BlocBuilder<ExerciseInfoPageCubit, ExerciseInfoPageState>(
+            BlocSelector<SetupCubit, SetupState, ExerciseDuration?>(
+              selector: (state) => state.userSetup.exerciseDuration,
               builder: (context, state) {
                 return SizedBox(
                   width: double.infinity,
@@ -198,11 +228,15 @@ class ExerciseInfo extends StatelessWidget {
                     itemCount: 4,
                     itemBuilder: (context, index) {
                       var data = dataDuration[index];
-                      var cubit = context.read<ExerciseInfoPageCubit>();
+
                       return LocationTrainingCard(
-                        onTap: () => cubit.selectDuration(data.d),
+                        onTap: () {
+                          context.read<SetupCubit>().saveExerciseDuration(
+                            exerciseDuration: data.d,
+                          );
+                        },
                         subtitle: data.subTitle,
-                        selected: state.duration == data.d,
+                        selected: state == data.d,
                         needPadding: false,
                         child: Text(
                           data.title,
@@ -228,7 +262,8 @@ class ExerciseInfo extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16.h),
-            BlocBuilder<ExerciseInfoPageCubit, ExerciseInfoPageState>(
+            BlocSelector<SetupCubit, SetupState, ActivityLevel?>(
+              selector: (state) => state.userSetup.activityLevel,
               builder: (context, state) {
                 return SizedBox(
                   width: double.infinity,
@@ -246,11 +281,14 @@ class ExerciseInfo extends StatelessWidget {
                     itemCount: 5,
                     itemBuilder: (context, index) {
                       var data = activityLevels[index];
-                      var cubit = context.read<ExerciseInfoPageCubit>();
                       return LocationTrainingCard(
-                        onTap: () => cubit.selectCurrentActivity(data.a),
+                        onTap: () {
+                          context.read<SetupCubit>().saveActivityLevel(
+                            activityLevel: data.a,
+                          );
+                        },
                         subtitle: data.subTitle,
-                        selected: state.currentActivityLevel == data.a,
+                        selected: state == data.a,
                         needPadding: false,
                         child: Text(
                           data.title,

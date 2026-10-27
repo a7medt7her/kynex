@@ -3,13 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kynex/core/unitles/app_color.dart';
 
 class SetupIndicator extends StatelessWidget {
-  const SetupIndicator({super.key, required this.currentPage});
+  const SetupIndicator({
+    super.key,
+    required this.currentPage,
+    required this.numberOfPages,
+  });
   final int currentPage;
+  final int numberOfPages;
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(4, (index) {
+      children: List.generate(numberOfPages, (index) {
         return AnimatedContainer(
           margin: REdgeInsets.symmetric(horizontal: 8),
           width: 32.w,

@@ -1,7 +1,9 @@
 class AssetsIcon {
   AssetsIcon._();
   static const iconsPath = 'assets/icons/';
-
+  static const cOMMITMENT = '${iconsPath}COMMITMENT.svg';
+  static const container = '${iconsPath}Container.svg';
+  static const goal = '${iconsPath}GOAL.svg';
   static const advanced = '${iconsPath}Advanced.svg';
   static const activeAdvanced = '${iconsPath}Avtive_Advanced.svg';
   static const eye = '${iconsPath}eye.svg';
@@ -33,6 +35,9 @@ class AssetsIcon {
 class Images {
   Images._();
   static const imagesPath = 'assets/images/';
+  static const finishSetupImageBackGround =
+      '${imagesPath}finishSetupImageBackGround.png';
+  static const womanProfile = '${imagesPath}menProfile.png';
   static const page1 = '${imagesPath}page1.png';
   static const page2 = '${imagesPath}page2.png';
   static const page3 = '${imagesPath}page3.png';

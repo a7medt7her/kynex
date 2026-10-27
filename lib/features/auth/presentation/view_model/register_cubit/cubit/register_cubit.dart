@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:kynex/core/helper/auth_helper.dart';
-import 'package:kynex/core/helper/create_user.dart';
 import 'package:kynex/core/helper/secure_storage_service.dart';
 import 'package:kynex/core/services/app_dependencies.dart';
+import 'package:kynex/features/auth/data/data_sources/user_auth.dart';
 import 'package:meta/meta.dart';
 
 part 'register_state.dart';
@@ -42,13 +42,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(SaveUserError(message: 'User UID not found'));
         return;
       }
-      await getIt.get<CreateUser>().addUserData(
-        uid,
-        username,
-        email,
-        isSetup,
-        createdAt,
-      );
+      await UserAuth().addUserData(username, email, isSetup, createdAt);
       emit(SaveUserSuccess());
     } catch (e) {
       emit(SaveUserError(message: e.toString()));

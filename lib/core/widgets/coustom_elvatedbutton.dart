@@ -35,7 +35,7 @@ class CustomElvatedButton extends StatelessWidget {
         padding: REdgeInsets.symmetric(vertical: 15.5),
         width: double.infinity,
         decoration: BoxDecoration(
-          border: BoxBorder.all(width: 1.w, color: AppColors.primary),
+          border: border,
           borderRadius: BorderRadius.circular(borderRadius ?? 12.r),
           color: colorContainer ?? AppColors.primary2,
         ),

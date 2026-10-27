@@ -61,12 +61,12 @@ num calculateBmi({
   final weightKg = convertWeight(
     weight: weight,
     from: weightUnit,
-    to: weightUnit,
+    to: WeightUnit.kg,
   );
 
   final heightCm = convertHeight(
     height: height,
-    to: heightUnit,
+    to: HeightUnit.cm,
     from: heightUnit,
   );
 
@@ -86,12 +86,12 @@ num calculateBmr({
   final weightKg = convertWeight(
     weight: weight,
     from: weightUnit,
-    to: weightUnit,
+    to: WeightUnit.kg,
   );
 
   final heightCm = convertHeight(
     height: height,
-    to: heightUnit,
+    to: HeightUnit.cm,
     from: heightUnit,
   );
 
@@ -145,17 +145,18 @@ num calculateWeightDifference({
   required num currentWeight,
   required num targetWeight,
   required WeightUnit weightUnit,
+  required WeightUnit targetWeightUnit,
 }) {
   final currentWeightKg = convertWeight(
     weight: currentWeight,
     from: weightUnit,
-    to: weightUnit,
+    to: WeightUnit.kg,
   );
 
   final targetWeightKg = convertWeight(
     weight: targetWeight,
-    from: weightUnit,
-    to: weightUnit,
+    from: targetWeightUnit,
+    to: WeightUnit.kg,
   );
 
   return (currentWeightKg - targetWeightKg).abs();
@@ -165,17 +166,18 @@ num calculateWeightChangePercentage({
   required num currentWeight,
   required num targetWeight,
   required WeightUnit weightUnit,
+  required WeightUnit targetWeightUnit,
 }) {
   final currentWeightKg = convertWeight(
     weight: currentWeight,
     from: weightUnit,
-    to: weightUnit,
+    to: WeightUnit.kg,
   );
 
   final targetWeightKg = convertWeight(
     weight: targetWeight,
-    from: weightUnit,
-    to: weightUnit,
+    from: targetWeightUnit,
+    to: WeightUnit.kg,
   );
 
   return ((currentWeightKg - targetWeightKg).abs() / currentWeightKg) * 100;
@@ -183,19 +185,19 @@ num calculateWeightChangePercentage({
 
 num calculateTargetBmi({
   required num targetWeight,
-  required WeightUnit weightUnit,
+  required WeightUnit targetWeightUnit,
   required num height,
   required HeightUnit heightUnit,
 }) {
   final targetWeightKg = convertWeight(
     weight: targetWeight,
-    from: weightUnit,
-    to: weightUnit,
+    from: targetWeightUnit,
+    to: WeightUnit.kg,
   );
 
   final heightCm = convertHeight(
     height: height,
-    to: heightUnit,
+    to: HeightUnit.cm,
     from: heightUnit,
   );
 

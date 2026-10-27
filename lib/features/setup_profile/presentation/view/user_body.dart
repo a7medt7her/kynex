@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kynex/core/helper/fitness_calculations.dart';
+import 'package:kynex/features/setup_profile/data/helper/fitness_calculations.dart';
 import 'package:kynex/core/unitles/app_color.dart';
 import 'package:kynex/core/unitles/app_text_style.dart';
 import 'package:kynex/features/setup_profile/data/helper/switchuntis.dart';
 import 'package:kynex/features/setup_profile/presentation/view/widgets/units_container.dart';
-import 'package:kynex/features/setup_profile/presentation/view_model/age_cubit/cubit/age_cubit.dart';
+import 'package:kynex/features/setup_profile/presentation/view_model/setup_cubit/cubit/setup_cubit.dart';
 import 'package:kynex/features/setup_profile/presentation/view_model/units_cubit/cubit/units_cubit.dart';
 
 class UserBody extends StatefulWidget {
-  const UserBody({super.key});
+  const UserBody({super.key, required this.userBodyFormKey});
+
+  final GlobalKey<FormState> userBodyFormKey;
 
   @override
   State<UserBody> createState() => _UserBodyState();
@@ -18,9 +20,7 @@ class UserBody extends StatefulWidget {
 
 class _UserBodyState extends State<UserBody> {
   final heightController = TextEditingController();
-
   final weightController = TextEditingController();
-
   final targetWeightController = TextEditingController();
   @override
   void dispose() {
@@ -32,15 +32,13 @@ class _UserBodyState extends State<UserBody> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => AgeCubit()),
-        BlocProvider(create: (context) => UnitsCubit()),
-      ],
+    return BlocProvider(
+      create: (context) => UnitsCubit(),
+
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: REdgeInsets.symmetric(horizontal: 20),
+        child: Form(
+          key: widget.userBodyFormKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -52,6 +50,7 @@ class _UserBodyState extends State<UserBody> {
                   fontWeight: AppTextStyle.bold,
                 ),
               ),
+
               Text(
                 'Tell us about yourself so we can calibrate your fitness journey.',
                 style: TextStyle(
@@ -92,7 +91,7 @@ class _UserBodyState extends State<UserBody> {
                                 fontWeight: AppTextStyle.semiBold,
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               'Years',
                               style: TextStyle(
@@ -104,7 +103,9 @@ class _UserBodyState extends State<UserBody> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 16),
+
+                        SizedBox(height: 16.h),
+
                         Container(
                           width: 316.w,
                           height: 77.h,
@@ -118,9 +119,9 @@ class _UserBodyState extends State<UserBody> {
                               ),
                             ),
                             gradient: LinearGradient(
-                              begin: AlignmentGeometry.topLeft,
-                              end: AlignmentGeometry.bottomRight,
-                              stops: [0.0, 0.5, 1.0],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              stops: const [0.0, 0.5, 1.0],
                               colors: [
                                 AppColors.primary2.withValues(alpha: 0.1),
                                 AppColors.primary2.withValues(alpha: 0.05),
@@ -128,26 +129,33 @@ class _UserBodyState extends State<UserBody> {
                               ],
                             ),
                           ),
-
-                          child: BlocBuilder<AgeCubit, int>(
+                          child: BlocSelector<SetupCubit, SetupState, int?>(
+                            selector: (state) => state.userSetup.age,
                             builder: (context, state) {
+                              final selectedAge = state ?? 18;
                               return PageView.builder(
                                 scrollDirection: Axis.horizontal,
                                 controller: PageController(
                                   viewportFraction: 0.3.w,
+                                  initialPage: selectedAge - 18,
                                 ),
                                 itemCount: 63,
+
                                 onPageChanged: (index) {
-                                  context.read<AgeCubit>().itemSelected(index);
+                                  final age = index + 18;
+                                  context.read<SetupCubit>().saveAge(age: age);
                                 },
+
                                 itemBuilder: (context, index) {
                                   final age = index + 18;
 
                                   return Center(
                                     child: AnimatedOpacity(
-                                      opacity: state == index ? 1 : 0.1,
+                                      opacity: age == selectedAge ? 1 : 0.1,
                                       curve: Curves.easeInOutSine,
-                                      duration: Duration(seconds: 1),
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
                                       child: Text(
                                         '$age',
                                         style: TextStyle(
@@ -163,13 +171,16 @@ class _UserBodyState extends State<UserBody> {
                             },
                           ),
                         ),
+
                         SizedBox(height: 16.h),
                       ],
                     ),
                   ),
                 ],
               ),
+
               SizedBox(height: 16.h),
+
               Container(
                 padding: REdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 width: double.infinity,
@@ -181,23 +192,66 @@ class _UserBodyState extends State<UserBody> {
                   borderRadius: BorderRadius.circular(14.r),
                   color: AppColors.black6.withValues(alpha: 0.6),
                 ),
+
                 child: BlocBuilder<UnitsCubit, UnitsState>(
                   builder: (context, state) {
+                    if (context.read<SetupCubit>().state.userSetup.height !=
+                        null) {
+                      heightController.text = context
+                          .read<SetupCubit>()
+                          .state
+                          .userSetup
+                          .height
+                          .toString();
+                    }
+                    if (context.read<SetupCubit>().state.userSetup.weight !=
+                        null) {
+                      weightController.text = context
+                          .read<SetupCubit>()
+                          .state
+                          .userSetup
+                          .weight
+                          .toString();
+                    }
+                    if (context
+                            .read<SetupCubit>()
+                            .state
+                            .userSetup
+                            .targetWeight !=
+                        null) {
+                      targetWeightController.text = context
+                          .read<SetupCubit>()
+                          .state
+                          .userSetup
+                          .targetWeight
+                          .toString();
+                    }
                     final cubit = context.read<UnitsCubit>();
 
                     return UnitsContainer(
                       unitName: 'Height',
+
                       whichUnit: cubit.heightUnit == HeightUnit.cm,
+
                       unit1: 'cm',
                       unit2: 'ft',
+
                       controller: heightController,
+                      onChanged: (value) {
+                        final height = num.tryParse(value);
+
+                        if (height == null) return;
+                        context.read<SetupCubit>().saveHeight(
+                          height: height,
+                          heightUnit: cubit.heightUnit,
+                        );
+                      },
                       onTap1: () {
                         switchUnits(
                           selectedUnit: HeightUnit.cm,
                           heightUnit: cubit.heightUnits,
                           unit: cubit.heightUnit == HeightUnit.cm,
                           convertHeight2: cubit.convertedHeight,
-
                           controllerText: heightController,
                         );
                       },
@@ -208,7 +262,6 @@ class _UserBodyState extends State<UserBody> {
                           heightUnit: cubit.heightUnits,
                           unit: cubit.heightUnit == HeightUnit.ft,
                           convertHeight2: cubit.convertedHeight,
-
                           controllerText: heightController,
                         );
                       },
@@ -237,6 +290,15 @@ class _UserBodyState extends State<UserBody> {
                       unit1: 'kg',
                       unit2: 'lbs',
                       controller: weightController,
+                      onChanged: (value) {
+                        final weight = num.tryParse(value);
+
+                        if (weight == null) return;
+                        context.read<SetupCubit>().saveWeight(
+                          weight: weight,
+                          weightUnit: cubit.weightUnit,
+                        );
+                      },
                       onTap1: () {
                         switchWeight(
                           selectedUnit: WeightUnit.kg,
@@ -274,12 +336,25 @@ class _UserBodyState extends State<UserBody> {
                 child: BlocBuilder<UnitsCubit, UnitsState>(
                   builder: (context, state) {
                     final cubit = context.read<UnitsCubit>();
+
                     return UnitsContainer(
                       unitName: 'Target Weight',
+
                       whichUnit: cubit.targetWeight == WeightUnit.kg,
+
                       unit1: 'kg',
                       unit2: 'lbs',
+
                       controller: targetWeightController,
+                      onChanged: (value) {
+                        final targetWeight = num.tryParse(value);
+
+                        if (targetWeight == null) return;
+                        context.read<SetupCubit>().saveTargetWeight(
+                          targetWeight: targetWeight,
+                          targetWeightUnit: cubit.targetWeight,
+                        );
+                      },
                       onTap1: () {
                         switchWeight(
                           selectedUnit: WeightUnit.kg,
@@ -289,6 +364,7 @@ class _UserBodyState extends State<UserBody> {
                           controllerText: targetWeightController,
                         );
                       },
+
                       onTap2: () {
                         switchWeight(
                           selectedUnit: WeightUnit.lb,
@@ -302,6 +378,7 @@ class _UserBodyState extends State<UserBody> {
                   },
                 ),
               ),
+
               SizedBox(height: 16.h),
             ],
           ),

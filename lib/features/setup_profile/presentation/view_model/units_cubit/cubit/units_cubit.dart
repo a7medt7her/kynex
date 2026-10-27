@@ -1,14 +1,14 @@
 import 'package:bloc/bloc.dart';
-import 'package:kynex/core/helper/fitness_calculations.dart';
+import 'package:kynex/features/setup_profile/data/helper/fitness_calculations.dart';
 import 'package:meta/meta.dart';
 
 part 'units_state.dart';
 
 class UnitsCubit extends Cubit<UnitsState> {
   UnitsCubit() : super(UnitsInitial());
-  WeightUnit? weightUnit = WeightUnit.kg;
-  HeightUnit? heightUnit = HeightUnit.cm;
-  WeightUnit? targetWeight = WeightUnit.kg;
+  WeightUnit weightUnit = WeightUnit.kg;
+  HeightUnit heightUnit = HeightUnit.cm;
+  WeightUnit targetWeight = WeightUnit.kg;
 
   void heightUnits(HeightUnit h) {
     heightUnit = h;
