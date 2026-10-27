@@ -23,8 +23,6 @@ jobs:
 
       - name: Verify Flutter installation
         run: flutter --version
-
-      - name: Install dependencies
         run: flutter pub get
 
       - name: Analyze project source
