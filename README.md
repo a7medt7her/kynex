@@ -1,17 +1,23 @@
-# kynex
+# Kynex
 
-A new Flutter project.
+A Flutter app with Firebase authentication and a step-by-step profile setup for fitness.
 
-## Getting Started
+## Features
+- Splash and onboarding screens
+- Register and login with Firebase Authentication
+- Setup flow: gender, body measurements, fitness goal (muscle gain, weight loss, flexibility, endurance), activity level and exercise information, with a progress indicator
+- Unit switching between kg/lb and cm/ft
+- User data saved to Cloud Firestore
 
-This project is a starting point for a Flutter application.
+## Status
+In progress. The home screen is still a placeholder.
 
-A few resources to get you started if this is your first Flutter project:
+## Tech stack
+Flutter, Dart, flutter_bloc (Cubit), Firebase Auth, Cloud Firestore, Dio, Dartz, get_it, flutter_secure_storage, flutter_screenutil, toastification
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Run it
+Connect your own Firebase project (`flutterfire configure`), then:
+```
+flutter pub get
+flutter run
+```
