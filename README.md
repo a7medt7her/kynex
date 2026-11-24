@@ -1,4 +1,4 @@
-# Kynex
+<img src="assets/banner.svg" alt="kynex" width="100%">
 
 A Flutter app with Firebase authentication and a step-by-step profile setup for fitness.
 
